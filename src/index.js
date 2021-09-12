@@ -1,15 +1,10 @@
-// 测试代码
-import './index.scss'
+// import _ from 'lodash'
 
-var root = document.getElementById('root');
-root.innerHTML = '<div class="iconfont icon-xishu">abc12</div>';
-console.log('1234567')
+import './css/style.css';
+import './css/style1.css';
 
-const arr = [
-    new Promise(()=>{}),
-    new Promise(()=>{}),
-];
-
-arr.map((item)=>{
-    console.log(item);
-})
+async function a(){
+    const {default: _} = await import (/* webpackChunkName: "lodash" */ 'lodash') 
+    console.log(_.join(['a','b'],','))
+}
+a()

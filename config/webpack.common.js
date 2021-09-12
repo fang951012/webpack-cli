@@ -2,26 +2,15 @@ const path = require('path')
 //plugin 在webpack运行到某一时刻，帮你做一些事情
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-// const webpack = require('webpack');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+
 
 module.exports = {
-    mode:'development',
-    // sourceMap 是一个映射关系，他知道dist目录下main.js文件错误对应开发目录文件下某一行的错误
-    // TODO: 性能待优化,打包后会生成.map文件
-    devtool:'source-map',
     entry:{
-        main:'./src/index.js',
-        // subMain:'./src/index.js'
+        main:'./src/index.js'
     },
-    // 本地开一个服务器方便调试
-    // TODO:有Bug，暂时用nodejs
-    devServer: {
-        static: {
-          directory: path.join(__dirname, 'public'),
-        },
-        compress: true,
-        port: 9000,
-      },
     module:{
         rules:[
             // babel文档 打包后es6转es5 https://www.babeljs.cn/setup#installation
@@ -39,7 +28,7 @@ module.exports = {
                 //   }
                 }
             },
-            // 打包图片url-loader 可以代替file-loader
+            // 打包图片url-loader
             {
                 test:/\.(jpg|png|svg)$/,
                 use:{
@@ -54,18 +43,19 @@ module.exports = {
                     }
                 }
             },{
-                test:/\.scss$/,
+                test:/\.css$/,
                 use:[
-                'style-loader',
-                {
-                    loader:'css-loader',
-                    options:{
-                        importLoaders:2
-                    }
-                },
-                'sass-loader',
-                'postcss-loader',
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
                 ]
+            },
+            // 用于svg和iconfont
+            {
+                test:/\.(eot|ttf|svg)$/,
+                use:{
+                    loader:'file-loader'
+                }
             }]
     },
     plugins:[
@@ -74,16 +64,46 @@ module.exports = {
             template:'src/index.html'
         }),
         // 打包前清理dist目录
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            root: '../dist/*'
+        }),
         // 热模块更新
         // new webpack.HotModuleReplacementPlugin()
+        // 打包生成css文件 https://webpack.docschina.org/plugins/mini-css-extract-plugin/
+        //TODO: 生成的css待压缩
+        new MiniCssExtractPlugin({
+        })
     ],
+    optimization:{
+        // Tree Sharking消除无用的js代码 只支持ES Module 在package.json配置sideEffects
+        usedExports:true,
+        //代码分割 引入js插件打包生成一个文件 提升性能
+        // https://webpack.docschina.org/plugins/split-chunks-plugin/
+        splitChunks:{
+            chunks: 'all',
+            cacheGroups: {
+              styles: {
+                name: "style",
+                type: "css/mini-extract",
+                chunks: "all",
+                enforce: true,
+              },
+            },
+        },
+        // css压缩
+        minimizer: [
+            new CssMinimizerPlugin(),
+          ],
+        //   在测试环境使用
+        minimize: true,
+    },
+    
     output:{
         publicPath:'',
         // 打包后的js域名
         // publicPath:'http://cdn.com/',
         filename:'[name].js',
         //当前路径
-        path:path.resolve(__dirname,'dist')
+        path:path.resolve(__dirname,'../dist')
     }
 }
