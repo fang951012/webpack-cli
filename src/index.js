@@ -8,3 +8,14 @@ async function a(){
     console.log(_.join(['a','b','c'],','))
 }
 a()
+
+
+if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('/service-worker.js').then(reg =>{
+            console.log(reg, 'serviceWorket注册成功')
+        }).catch(error =>{
+            console.log(error, '注册失败')
+        })
+    })
+}
