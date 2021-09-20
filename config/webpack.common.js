@@ -99,10 +99,6 @@ module.exports = {
     },
     
     output:{
-        publicPath:'',
-        // 打包后的js域名
-        // publicPath:'http://cdn.com/',
-        filename:'[name].js',
         //当前路径
         path:path.resolve(__dirname,'../dist')
     }

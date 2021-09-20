@@ -5,6 +5,6 @@ import './css/style1.css';
 
 async function a(){
     const {default: _} = await import (/* webpackChunkName: "lodash" */ 'lodash') 
-    console.log(_.join(['a','b'],','))
+    console.log(_.join(['a','b','c'],','))
 }
 a()

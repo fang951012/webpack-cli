@@ -18,5 +18,11 @@ const devConfig = {
         // 热模块更新
         // new webpack.HotModuleReplacementPlugin()
     ],
+    output:{
+      publicPath:'',
+      // 打包后的js域名
+      // publicPath:'http://cdn.com/',
+      filename:'[name].js',
+  }
 }
 module.exports = merge(commonConfig,devConfig);
