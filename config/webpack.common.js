@@ -10,6 +10,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 module.exports = {
     entry:{
         main:'./src/index.js'
+        // main:'./src/ts.ts'
     },
     module:{
         rules:[
@@ -27,6 +28,10 @@ module.exports = {
                 //     }]
                 //   }
                 }
+            },{
+                test:/\.ts?$/,
+                use:'ts-loader',
+                exclude:/node_modules/,
             },
             // 打包图片url-loader
             {
