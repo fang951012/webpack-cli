@@ -2,13 +2,11 @@
 
 import './css/style.css';
 import './css/style1.css';
-
 async function a(){
     const {default: _} = await import (/* webpackChunkName: "lodash" */ 'lodash') 
     console.log(_.join(['a','b','c'],','))
 }
 a()
-
 
 if('serviceWorker' in navigator){
     window.addEventListener('load',()=>{
@@ -19,3 +17,11 @@ if('serviceWorker' in navigator){
         })
     })
 }
+
+import axios from 'axios';
+function list(){
+    axios.get('/api/list').then((res)=>{
+        console.log(res)
+    })
+}
+list()
