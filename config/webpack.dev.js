@@ -13,6 +13,7 @@ const devConfig = {
       },
       compress: true,
       port: 8080,
+      historyApiFallback: true,
       proxy: {
           '/api': {
               target: 'http://www.filmshow.com.cn/mock/659', // 本地用yapi mock的数据

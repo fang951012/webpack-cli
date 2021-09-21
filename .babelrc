@@ -1,13 +1,11 @@
 {
-    presets: [
+    "presets": [
         [
             "@babel/preset-env", {
-                targets: {
-                    chrome: "67",
-                },
-                useBuiltIns: 'usage'
+                "useBuiltIns": "entry"
             }
-        ],
+            
+        ]
     ],
-    plugins: ["@babel/plugin-syntax-dynamic-import"]
+    "plugins": ["@babel/plugin-syntax-dynamic-import"]
 }

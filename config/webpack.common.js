@@ -4,14 +4,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-
-
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
     entry:{
-        main:'./src/index.js'
-        // main:'./src/ts.ts'
+        main:'./src/index.js',
+    //     // main:'./src/ts.ts'
     },
+    resolve: {
+        //路径别名
+        alias: {
+          'vue$': 'vue/dist/vue.esm.js',
+          '@':path.resolve(__dirname, './src'),
+        },
+        //路径别名自动解析确定的扩展
+        extensions: ['.js', '.vue', '.json']
+      },
     module:{
         rules:[
             // babel文档 打包后es6转es5 https://www.babeljs.cn/setup#installation
@@ -50,6 +58,7 @@ module.exports = {
             },{
                 test:/\.css$/,
                 use:[
+                    'vue-style-loader',
                     MiniCssExtractPlugin.loader,
                     'css-loader',
                     'postcss-loader',
@@ -61,7 +70,11 @@ module.exports = {
                 use:{
                     loader:'file-loader'
                 }
-            }]
+            },{
+                test: /\.vue$/,
+                loader: 'vue-loader'
+              }
+            ]
     },
     plugins:[
         //打包结束后，自动生成html文件，并且吧生成的js自动引入到html中
@@ -77,7 +90,8 @@ module.exports = {
         // 打包生成css文件 https://webpack.docschina.org/plugins/mini-css-extract-plugin/
         //TODO: 生成的css待压缩
         new MiniCssExtractPlugin({
-        })
+        }),
+        new VueLoaderPlugin()
     ],
     optimization:{
         // Tree Sharking消除无用的js代码 只支持ES Module 在package.json配置sideEffects
